@@ -1,0 +1,15 @@
+{% for enum in types.enums where enum.implements.AutoCases or enum|annotated:"AutoCases" %}
+// sourcery:file:{{ enum.name }}+AutoCases.swift
+
+import Foundation
+
+{{ enum.accessLevel }} extension {{ enum.name }} {
+  static let count: Int = {{ enum.cases.count }}
+  {% if not enum.hasAssociatedValues %}
+  static let allCases: [{{ enum.name }}] = [
+  {% for case in enum.cases %}  .{{ case.name }}{{ ',' if not forloop.last }}
+  {% endfor %}]
+  {% endif %}
+}
+// sourcery:end
+{% endfor %}
